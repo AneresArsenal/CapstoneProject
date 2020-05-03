@@ -1,0 +1,120 @@
+{
+    "restaurant": [{
+            "PutRequest": {
+                "Item": {
+                    "restaurant_id": {
+                        "S": "restaurant_1"
+                    },
+                    "restaurant_username": {
+                        "S": "Bakes_and_Sandwiches"
+                    },
+                    "restaurant_name": {
+                        "S": "Bakes and Sandwiches"
+                    },
+                    "restaurant_longtitude": {
+                        "S": "122.3406° W"
+                    },
+                    "restaurant_latitude": {
+                        "S": "47.6086° N"
+                    },
+                    "restaurant_phone_num": {
+                        "S": "706-888-1234"
+                    },
+                    "restaurant_address_line1": {
+                        "S": "2nd Ave"
+                    },
+                    "restaurant_address_line2": {
+                        "S": "Unit 100"
+                    },
+                    "restaurant_city": {
+                        "S": "Seattle"
+                    },
+                    "restaurant_state": {
+                        "S": "Washington"
+                    },
+                    "restaurant_postal_code": {
+                        "S": "WA 98101"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "restaurant_id": {
+                        "S": "restaurant_2"
+                    },
+                    "restaurant_username": {
+                        "S": "Pippa_Roastery"
+                    },
+                    "restaurant_name": {
+                        "S": "Pippa's Roastery"
+                    },
+                    "restaurant_longtitude": {
+                        "S": "122.6463° W"
+                    },
+                    "restaurant_latitude": {
+                        "S": "45.5296° N"
+                    },
+                    "restaurant_phone_num": {
+                        "S": "503-303-5030"
+                    },
+                    "restaurant_address_line1": {
+                        "S": "118 NE Martin Luther King Jr Blvd"
+                    },
+                    "restaurant_address_line2": {
+                        "S": "Apt 12"
+                    },
+                    "restaurant_city": {
+                        "S": "Portland"
+                    },
+                    "restaurant_state": {
+                        "S": "Oregon"
+                    },
+                    "restaurant_postal_code": {
+                        "S": "OR 97232"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "restaurant_id": {
+                        "S": "restaurant_3"
+                    },
+                    "restaurant_username": {
+                        "S": "Grubs_and_Hubs"
+                    },
+                    "restaurant_name": {
+                        "S": "Grubs and Hubs"
+                    },
+                    "restaurant_longtitude": {
+                        "S": "104.9710° W"
+                    },
+                    "restaurant_latitude": {
+                        "S": "39.7327° N"
+                    },
+                    "restaurant_phone_num": {
+                        "S": "303-333-3030"
+                    },
+                    "restaurant_address_line1": {
+                        "S": "1725 E 17th Ave"
+                    },
+                    "restaurant_address_line2": {
+                        "S": "Unit 12"
+                    },
+                    "restaurant_city": {
+                        "S": "Denver"
+                    },
+                    "restaurant_state": {
+                        "S": "Colorado"
+                    },
+                    "restaurant_postal_code": {
+                        "S": "CO 80218"
+                    }
+                }
+            }
+        }
+    ]
+}

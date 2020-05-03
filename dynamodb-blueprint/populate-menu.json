@@ -1,0 +1,88 @@
+{
+      "menu" : [
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_1"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_1"
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_2"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_2"
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_3"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_3"
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_4"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_4"
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_5"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_5"
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_6"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_6"
+                  }
+               }
+            }
+         },
+         {
+            "PutRequest": {
+               "Item": {
+                  "menu_id" : {
+                     "S": "menu_7"
+                  },
+                  "restaurant_id" : {
+                     "S": "restaurant_7"
+                  }
+               }
+            }
+         }
+      ]
+   }

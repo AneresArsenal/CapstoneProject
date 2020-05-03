@@ -1,0 +1,45 @@
+{
+  "TableName": "menu_item",
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  },
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "menu_item_id",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "menu_id",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "menu_item_id",
+      "KeyType": "HASH"
+    }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "menu_index",
+      "KeySchema": [
+        {
+          "AttributeName": "menu_id",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "menu_item_id",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": {
+        "ReadCapacityUnits": 5,
+        "WriteCapacityUnits": 5
+      }
+    }
+  ]
+}

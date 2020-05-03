@@ -1,0 +1,138 @@
+{
+    "menu_item": [{
+            "PutRequest": {
+                "Item": {
+                    "menu_item_id": {
+                        "S": "menu_item_1"
+                    },
+                    "item_name": {
+                        "S": "test1"
+                    },
+                    "item_type": {
+                        "S": "Evangeline"
+                    },
+                    "item_description": {
+                        "S": "Chimera"
+                    },
+                    "item_unit_price": {
+                        "N": "12.00"
+                    },
+                    "item_quantity_available": {
+                        "N": "10"
+                    },
+                    "menu_id": {
+                        "S": "menu_1"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "menu_item_id": {
+                        "S": "menu_item_2"
+                    },
+                    "item_name": {
+                        "S": "test2"
+                    },
+                    "item_type": {
+                        "S": "Pauly"
+                    },
+                    "item_description": {
+                        "S": "Cyclops"
+                    },
+                    "item_unit_price": {
+                        "N": "15.00"
+                    },
+                    "item_quantity_available": {
+                        "N": "50"
+                    },
+                    "menu_id": {
+                        "S": "menu_1"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "menu_item_id": {
+                        "S": "menu_item_3"
+                    },
+                    "item_name": {
+                        "S": "test3"
+                    },
+                    "item_type": {
+                        "S": "CoCo"
+                    },
+                    "item_description": {
+                        "S": "Dragon"
+                    },
+                    "item_unit_price": {
+                        "N": "3.00"
+                    },
+                    "item_quantity_available": {
+                        "N": "5"
+                    },
+                    "menu_id": {
+                        "S": "menu_1"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "menu_item_id": {
+                        "S": "menu_item_4"
+                    },
+                    "item_name": {
+                        "S": "test4"
+                    },
+                    "item_type": {
+                        "S": "Gretta"
+                    },
+                    "item_description": {
+                        "S": "Gorgon"
+                    },
+                    "item_unit_price": {
+                        "N": "8.00"
+                    },
+                    "item_quantity_available": {
+                        "N": "0"
+                    },
+                    "menu_id": {
+                        "S": "menu_1"
+                    }
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                    "menu_item_id": {
+                        "S": "menu_item_5"
+                    },
+                    "item_name": {
+                        "S": "test5"
+                    },
+                    "item_type": {
+                        "S": "Hasla"
+                    },
+                    "item_description": {
+                        "S": "Haetae"
+                    },
+                    "item_unit_price": {
+                        "N": "7.00"
+                    },
+                    "item_quantity_available": {
+                        "N": "2"
+                    },
+                    "menu_id": {
+                        "S": "menu_1"
+                    }
+                }
+            }
+        }
+    ]
+}
