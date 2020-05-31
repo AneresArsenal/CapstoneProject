@@ -14,15 +14,29 @@ import uuid
 import decimal
 from decimal import Decimal
 import restaurant
-import order
+import order as o
+#from order import bluep
 import random
 import business
+import customer
+from flask_mail import Mail, Message
 
 
 application = Flask(__name__)
+
+application.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME = 'menufy.capstone@gmail.com',
+    MAIL_PASSWORD = 'Capstone20!'
+)
+mail = Mail(application)
+
 application.register_blueprint(restaurant.bp)
-application.register_blueprint(order.bp)
+application.register_blueprint(o.bp)
 application.register_blueprint(business.bp)
+application.register_blueprint(customer.bp)
 
 TABLE_NAME = "customer"
 dynamodb_client = boto3.client('dynamodb', region_name="us-west-2")
@@ -100,6 +114,7 @@ def signup(customer_username, customer_id):
     if request.method == 'POST':
         # get user input
         customer_username = request.form['username']
+        customer_email = request.form['customer_email']
         hashed_pw = generate_password_hash(request.form['password'])
         customer_fname = request.form['customer_fname']
         customer_lname = request.form['customer_lname']
@@ -132,6 +147,7 @@ def signup(customer_username, customer_id):
         item = {
             'customer_id': new_customer_id,
             'customer_username': customer_username,
+            'customer_email': customer_email,
             'password': hashed_pw,
             'customer_fname': customer_fname,
             'customer_lname': customer_lname,
@@ -196,8 +212,9 @@ def business_login(restaurant_username, restaurant_id):
         # Verify password
         elif check_password_hash(row['Items'][0]['password'], pw):
             session['restaurant_id'] = row['Items'][0]['restaurant_id']
+            restaurant_id =  row['Items'][0]['restaurant_id']
             session['restaurant_username'] = restaurant_username
-            return redirect(url_for('business.business_home'))
+            return redirect(url_for('business.business_home', rid = restaurant_id))
 
         # If incorrect password
         else:
@@ -223,11 +240,11 @@ def business_signup(restaurant_username, restaurant_id):
         hashed_pw = generate_password_hash(request.form['password'])
         restaurant_name = request.form['restaurant_name']
         restaurant_phone_num = request.form['restaurant_phone_num']
-        restaurant_address_1 = request.form['restaurant_address_1']
-        restaurant_address_2 = request.form['restaurant_address_2']
+        restaurant_address_1 = request.form['restaurant_address_line1']
+        restaurant_address_2 = request.form['restaurant_address_line2']
         restaurant_city = request.form['restaurant_city']
         restaurant_state = request.form['restaurant_state']
-        restaurant_zip = request.form['restaurant_zip']
+        restaurant_postal_code = request.form['restaurant_postal_code']
 
         # validate user input
         if not restaurant_username or not hashed_pw:
@@ -254,17 +271,33 @@ def business_signup(restaurant_username, restaurant_id):
             'password': hashed_pw,
             'restaurant_name': restaurant_name,
             'restaurant_phone_num': restaurant_phone_num,
-            'restaurant_address_1': restaurant_address_1,
-            'restaurant_address_2': restaurant_address_2,
+            'restaurant_address_line1': restaurant_address_1,
+            'restaurant_address_line2': restaurant_address_2,
             'restaurant_city': restaurant_city,
             'restaurant_state': restaurant_state,
-            'restaurant_zip': restaurant_zip
+            'restaurant_postal_code': restaurant_postal_code
         }
 
         # if valid input, insert into users table in the db
         table.put_item(
             Item=item
         )
+
+        menu_table = dynamodb.Table('menu') # pylint: disable=no-member
+
+        # generate random UUID for restaurant_id
+        new_menu_id_inital = uuid.uuid4()
+        new_menu_id = str(new_restaurant_id_inital)
+
+        item = {
+            'restaurant_id': new_restaurant_id,
+            'menu_id': new_menu_id
+        }
+
+        menu_table.put_item(
+            Item=item
+        )
+
 
         flash("Successfully signed up! Please log in to continue", "success")
         return redirect(url_for('business_login'))

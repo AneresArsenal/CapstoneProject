@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% block content %}
+<div class="jumbotron rounded-0">
+    <div class="container text-center">
+        <div id="jumbo-text">
+            <h1 class="display-4">Order Page for {{ order.restName }}</h1>
+        </div>
+    </div>
+</div>
+
+<div>
+	<form id="order_form{{restaurant_id}}" method="POST" action="/order/{{restaurant_id}}/customer/">
+		<table class="table table-hover table-striped table-dark">
+			<thead>
+				<tr>
+					<th> 
+						<td>
+							<h3>Order Summary</h3>
+						</td>
+					</th>
+				</tr>
+        	</thead>
+			<tbody>
+				<tr>
+            		<td> <h4>Menu Item </h4></td>
+            		<td align="right"> <h4> Quantity </h4></td>
+            		<td align="right"> <h4> Subtotal </h4></td>
+        		</tr>
+        		{%for item in itemDetails %}
+        		<tr>
+					<input type="hidden" id={{item.item_id}} name="item_id" value={{item.item_id}}>
+            		<td> {{item.item_name}} </td>
+            		<td align="right"> <input type="hidden" name="item_quantity" value={{item.quantity}}> {{item.quantity}} </td>
+            		<td align="right"> <input type="hidden" name="item_subtotal" value={{item.item_subtotal}}> ${{item.item_subtotal}} </td>
+        		</tr>
+        		{% endfor %}
+				<tr>
+					<td>
+						<input type="radio" id="orderType1" name="order_type" value="Carry Out">
+						<label for="orderType1">Carry Out</label>
+					</td>
+					<td>
+						<input type="radio" id="orderType2" name="order_type" value="Dine In" checked>
+						<label for="orderType2">Dine In</label>
+					</td>
+					<td align="right">
+						<button type="submit" class="btn btn-warning" style="margin: 5px;">Place Order</button>
+						<span> </span>
+						<button type="button" class="btn btn-warning" style="margin: 5px;" onclick="window.location.href='/restaurant/{{restaurant_id}}'"> Edit Order</button>						
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+
+		<!--<div class="form-group">
+			<input type="radio" id="orderType1" name="order_type" value="Carry Out">
+			<label for="orderType1">Carry Out</label>
+			<input type="radio" id="orderType2" name="order_type" value="Dine In" checked>
+			<label for="orderType1">Dine In</label>
+
+            <button type="submit" class="btn btn-warning">Place Order</button>
+        </div>
+	</form>
+	<form method="GET" action="/restaurant/{{restaurant_id}}">
+		<div class="form-group" style="vertical-align: middle;">
+            <button type="submit" class="btn btn-warning">Change Order</button>
+        </div>-->
+	</form>
+</div>
+
+{% endblock %}

@@ -18,25 +18,39 @@
     <link href="{{url_for('static', filename='styles/index.css')}}" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap JS/JQuery -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.4.0/json2html.min.js"></script>
+
+    <!-- Other scripts -->
+    <script type="text/javascript" src="/static/scripts/signup.js"></script>
+    <script type="text/javascript" src="/static/scripts/background.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Yeseva+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alike" rel="stylesheet">
 </head>
 
-<body>
+<body onload="randombg()" id="randbg">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <!-- Left side links -->
         <div class="collapse navbar-collapse w-100 order-1 order-md-0 dual-collapse2">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    {% if restaurant_username %}
+                    <a class="nav-link" href="/business/{{ restaurant_id }}/home">Home</a> {% else %}
+                    <a class="nav-link" href="/">Home</a> {% endif %}
                 </li>
             </ul>
         </div>
         <!-- Center Brand -->
         <div class="mx-auto order-0">
-            <a class="navbar-brand" href="/"> Menufy </a>
+            {% if restaurant_username %}
+                <a class="navbar-brand" href="/business/{{ restaurant_id }}/home">Menufy</a>
+            {% else %}
+                <a class="navbar-brand" href="/">Menufy</a> 
+            {% endif %}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2" aria-controls=".dual-collapse2" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -46,6 +60,9 @@
             <ul class="navbar-nav ml-auto">
                 {% if customer_username %}
                 <li class="nav-item">
+                    <a class="nav-link btn btn-dark" href="/customer/{{customer_id}}/dashboard">MyDashboard</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link btn btn-dark" href="/index">Logged in as {{ customer_username }}</a>
                 </li>
                 <li class="nav-item">
@@ -53,7 +70,7 @@
                 </li>
                 {% elif restaurant_username %}
                 <li class="nav-item">
-                    <a class="nav-link btn btn-dark" href="/business/home">Logged in as {{ restaurant_username }}</a>
+                    <a class="nav-link btn btn-dark" href="/business/{{restaurant_id}}/home">Logged in as {{ restaurant_username }}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn btn-dark" href="/business_logout">Logout</a>
@@ -83,9 +100,5 @@
     </div>
 
     {% block content %} {% endblock %}
-
-    <!-- Other scripts -->
-    <!-- <script type="text/javascript" src="{{url_for('static', filename='scripts/index.js')}}"></script> -->
-</body>
-
+    <div><br></div>
 </html>

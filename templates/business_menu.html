@@ -1,0 +1,302 @@
+{% extends "base.html" %} {% block content %}
+<div class="jumbotron rounded-0">
+    <div class="container text-center">
+        <div id="jumbo-text">
+            <h1 class="display-4">Menufy</h1>
+            <p class="lead">{{restaurant_name}} Inventory Levels</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-11 container backdrop">
+    <div class="list-group align-items-center">
+        <button class="btn btn-primary" name="add-item" type="button" id="{{restaurant_id}}" data-toggle="modal" data-target='#exampleModal'>Add Menu Item</button>
+    </div>
+    <br>
+    <form id="business_orders_form{{restaurant_id}}" method="POST">
+        <table class="table table-hover table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Item Description</th>
+                    <th scope="col">Item Cost</th>
+                    <th scope="col">Quantity In Stock</th>
+                    <th scope="col">Item Type</th>
+                </tr>
+            </thead>
+            <tbody id="menu">
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<!-- Modal for Edit -->
+<div class="modal fade" id="itemDisplay" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                <form id="menu_edit_form" method="POST">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- <a type="button" onclick="edit_menu()" class="btn btn-primary">Save changes</a> -->
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            <script type="text/javascript">
+                function edit_menu() {
+                    var menu_item_id = $('#menu_edit_form').attr('name');
+                    $.ajax({
+                        type: "POST",
+                        url: '/business/' + menu_item_id,
+                        data: $('#menu_edit_form').serialize(),
+                        success: function(response) {
+                            var button = document.getElementById('close');
+                            button.click();
+                            document.menu_add_form.reset();
+                        }
+                    });
+                    return false;
+                }
+            </script>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Create -->
+<div class="modal fade" id="createItemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                <form name="menu_add_form" id="menu_add_form" data-toggle="validator" role="form">
+                    <div class="form-group">
+                        <label for="item_name" class="control-label">Item Name</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="item_name" name="item_name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="item_description" class="control-label">Item Description</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="item_description" name="item_description" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="item_quantity_available" class="control-label">Item Quantity Available</label>
+                        <div class="input-group">
+                            <input type="number" min="0" class="form-control" id="item_quantity_available" name="item_quantity_available" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="item_type" class="control-label">Item Type</label>
+                        <div class="input-group">
+                            <select class="custom-select" id="item_type" name="item_type" required>
+                                <option id="item_type_select" selected disabled value="">Menu Item Type</option>
+                                <option>Breakfast and Brunch</option>
+                                <option>Non-Alcoholic Drinks</option>
+                                <option>Alcoholic Drinks</option>
+                                <option>Lunch and Dinner</option>
+                                <option>Desserts</option>
+                                <option>Appetizers</option>
+                                <option>Baked Goods</option>
+                              </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="item_unit_price" class="control-label">Unit Price</label>
+                        <div class="input-group">
+                            <input type="number" min="0" step=".01" class="form-control" id="item_unit_price" name="item_unit_price" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id='save_button' onclick="form_submit()" class="btn btn-primary"></button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- <a type="button" onclick="form_submit()" class="btn btn-primary" method="POST">Add Item</a> -->
+                <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            <script type="text/javascript">
+                function form_submit() {
+                    var restaurant_id = $('#menu_add_form').attr('name');
+                    $.ajax({
+                        type: "POST",
+                        url: '/business/' + restaurant_id + '/add_menu_item',
+                        data: $('#menu_add_form').serialize(),
+                        success: function(response) {
+                            var button = document.getElementById('close');
+                            button.click();
+                            document.menu_add_form.reset();
+                        }
+                    });
+                    return false;
+                }
+
+                function edit_menu() {
+                    var menu_item_id = $('#menu_add_form').attr('name');
+                    $.ajax({
+                        type: "POST",
+                        url: '/business/' + menu_item_id,
+                        data: $('#menu_add_form').serialize(),
+                        success: function(response) {
+                            var button = document.getElementById('close');
+                            button.click();
+                            document.menu_add_form.reset();
+                        }
+                    });
+                    return false;
+                }
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var menu_data = JSON.parse('{{ menu_data |  safe }}');
+
+    var transform = {
+        "<>": "tr",
+        'id': '${menu_item_id}',
+        "children": [{
+            "<>": "input",
+            "type": "hidden",
+            'id': '${menu_item_id}',
+            "name": "menu_item_id",
+            "value": '${menu_item_id}'
+        }, {
+            "<>": "td",
+            'name': 'item_name',
+            "html": "${item_name}",
+            "value": "${item_name}",
+        }, {
+            "<>": "td",
+            'name': 'item_description',
+            "html": "${item_description}",
+            "value": "${item_description}"
+        }, {
+            "<>": "td",
+            "html": "$ ${item_unit_price}"
+        }, {
+            "<>": "td",
+            "html": "${item_quantity_available}"
+        }, {
+            "<>": "td",
+            "html": "${item_type}"
+        }, {
+            "<>": "td",
+            "children": [{
+                '<>': 'button',
+                'type': 'button',
+                'class': "btn btn-primary mr-3",
+                'data-toggle': "modal",
+                'name': 'edit-menu',
+                'value': "${item_name},${item_description},${item_unit_price},${item_quantity_available}",
+                'id': '${menu_item_id}',
+                'html': 'edit'
+            }, {
+                '<>': 'button',
+                'class': "btn btn-danger",
+                'type': 'button',
+                'name': 'delete',
+                'id': '${menu_item_id}',
+                'html': 'delete'
+            }]
+        }]
+    };
+
+    $('#menu').html(json2html.transform(menu_data, transform));
+
+    $('button[name ="add-item"]').click(function() {
+        var restaurant_id = $(this).attr('id');
+        $(".modal-title").html("Add New Menu Item");
+        createMenuItem(restaurant_id);
+        document.getElementById('menu_add_form').setAttribute("name", restaurant_id);
+
+        button = document.getElementById('save_button');
+        button.setAttribute("onclick", "form_submit()");
+        button.innerHTML = "Add Item";
+        orderModal.modal('show');
+    });
+
+    function createMenuItem(restaurant_id) {
+        // console.log(restaurant_id);
+        var createModal = $('#createItemModel');
+        form_input = '';
+        createModal.modal('show');
+    }
+
+    $('button[name ="edit-menu"]').click(function() {
+        var menu_item_id = $(this).attr('id');
+        var menu_item_data = $(this).attr('value');
+        var arr = menu_item_data.split(',');
+        $(".modal-title").html("Edit Menu Item");
+        var response = getMenuItem(menu_item_id);
+        document.getElementById('menu_edit_form').setAttribute("name", menu_item_id);
+    });
+
+    function getMenuItem(menu_item_id) {
+        var orderModal = $('#createItemModel');
+        var edit_form = $('#menu_add_form');
+        form = document.getElementById('menu_add_form');
+        form.setAttribute("name", menu_item_id);
+
+        $.ajax({
+            type: "GET",
+            url: '/business/' + menu_item_id,
+            success: function(response) {
+                console.log(response);
+
+                $.each(JSON.parse(response), function(attribute, val) {
+                    // console.log(attribute, val);
+                    if (attribute == 'menu_item_id') {
+                        edit_form.find('#menu_item_id').val(val);
+                    } else if (attribute == 'item_name') {
+                        edit_form.find('#item_name').val(val);
+                    } else if (attribute == 'item_description') {
+                        edit_form.find('#item_description').val(val);
+                    } else if (attribute == 'item_quantity_available') {
+                        edit_form.find('#item_quantity_available').val(val);
+                    } else if (attribute == 'item_type') {
+                        edit_form.find('#item_type_select').val(val);
+                    } else if (attribute == 'item_unit_price') {
+                        edit_form.find('#item_unit_price').val(val);
+                    }
+                })
+
+                button = document.getElementById('save_button');
+                button.setAttribute("onclick", "edit_menu()");
+                button.innerHTML = "Save Changes";
+                orderModal.modal('show');
+            }
+        });
+        return false;
+    }
+
+    $('button[name ="delete"]').click(function() {
+        var menu_item_id = $(this).attr('id');
+        $.ajax({
+            type: "POST",
+            url: '/business/delete/' + menu_item_id,
+            data: $('#menu_edit_form').serialize(),
+            success: function(response) {
+                location.reload();
+            }
+        });
+        return false;
+
+    });
+</script>
+{% endblock %}

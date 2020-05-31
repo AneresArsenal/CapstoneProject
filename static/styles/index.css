@@ -1,18 +1,59 @@
-.jumbotron {
-    background: url("../images/Beer_On_Bar_Counter.jpg") no-repeat center center;
+html,
+body {
+    background: no-repeat center center;
     background-size: cover;
+    height: 100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+body #randbg {
+    background: no-repeat center center;
+    background-size: cover;
+    height: 100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+nav {
+    /* text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4), 0px 8px 13px rgba(0, 0, 0, 0.1), 0px 18px 23px rgba(0, 0, 0, 0.1); */
+    font-family: 'Yeseva One', cursive;
+    color: white;
+    font-weight: 600;
+}
+
+.modBar {
+    /* text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4); */
+    font-family: 'Yeseva One', cursive;
+    color: rgb(2, 3, 68);
+    font-weight: 600;
+}
+
+.jumbotron {
+    background: none;
     padding-top: 10%;
     padding-bottom: 10%;
 }
 
 .jumbotron h1,
 .jumbotron p {
-    color: white;
+    font-family: 'Alike', serif;
     font-weight: 600;
-    text-shadow: 3px 3px 6px black;
+    /* text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4), 0px 8px 13px rgba(0, 0, 0, 0.1), 0px 18px 23px rgba(0, 0, 0, 0.1); */
+    color: #f4f4f4;
 }
 
 #jumbo-text {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding-top: 5%;
+    padding-bottom: 5%;
+    border-radius: 10px;
+}
+
+.backdrop {
+    color: white;
+    font-weight: 600;
+    text-shadow: none;
     background-color: rgba(0, 0, 0, 0.7);
     padding-top: 5%;
     padding-bottom: 5%;
@@ -85,15 +126,3 @@ input {
     background-color: #343a40 !important;
     color: #fff;
 }
-
-
-/* #map {
-    top: 10%;
-    bottom: 0;
-    width: 100%;
-    border: 2px solid orange;
-}
-
-#add-fact-form {
-    display: none;
-} */

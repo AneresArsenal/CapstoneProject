@@ -1,0 +1,185 @@
+{% extends "base.html" %} {% block content %}
+<div class="jumbotron rounded-0">
+  <div class="container text-center">
+      <div id="jumbo-text">
+          <h1 class="display-4">{{customer_username}}'s Dashboard</h1>
+      </div>
+  </div>
+</div>
+
+<div class="col-lg-8 container backdrop">
+    <h3>Customer Information</h3>
+    {% for c in customer_info['Items'] %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <b>First Name: </b><br>{{ c.customer_fname }}
+            </div>
+            <div class="col">
+                <b>Last Name: </b><br>{{ c.customer_lname }}
+            </div>
+            <div class="col">
+                <b>Phone Number: </b><br>{{ c.customer_phone_num }}
+            </div>
+            <div class="col">
+              <b>Email: </b><br>{{ c.customer_email }}
+          </div>
+        <div>
+
+        </div class="row">
+            <div class="col">
+            <b>Address: </b>
+              <br>{{ c.customer_address_1 }}
+              {% if c.customer_address_2 %}
+              <br>{{ c.customer_address_2 }}
+              {% endif %}
+              <br>{{ c.customer_city }}, {{ c.customer_state }}
+              <br>{{ c.customer_zip }}
+            </div>
+        </div>
+        <br>
+        <a class="btn btn-primary" role="button" href="/customer/{{customer_id}}/edit">Edit Contact Information</a>
+    </div>
+    {% endfor %}
+    <br><br>
+    <h3>Filter Table By:</h3>
+    <div class="container">
+      
+      <form class="was-validated" id="sort_by" action="./dashboard" method="post">
+        <div class="form-group">        
+          <div class="form-group">
+            <label for="orderDate">Order Date</label>
+            <input type="date" class="form-control is-invalid" id="orderDate" placeholder="Order Date" name="order_date" />
+          </div>
+        </div>
+
+        <div class="form-group">        
+            <div class="form-group">
+              <label for="orderTime">Order Time</label>
+              <input type="time" class="form-control is-invalid" id="orderTime" placeholder="Order Time" name="order_time" step="1"/>
+            </div>
+          </div>
+          
+        <div class="form-group">        
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" class="form-control is-invalid" id="endDate" name="end_date" />
+          </div>
+        </div>
+
+        <div class="form-group">        
+            <div class="form-group">
+              <label for="endTime">End Date</label>
+              <input type="time" class="form-control is-invalid" id="endTime" name="end_time" step="1" />
+            </div>
+        </div>
+          
+          
+        <div class="form-group">
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+      
+    </div>
+  </div>
+
+  <div class="col-lg-12 row">
+  
+      <h3>All Orders By Filter</h3>
+  
+      <table class="table table-hover table-dark">
+          <thead>
+          <tr>
+              <th scope="col" style="display:none">restaurant_id</th>
+              <th scope="col">Restaurant Name</th>
+              <th scope="col">Order Number</th>
+              <th scope="col">Order Time</th>
+              <th scope="col">Order Completion Time </th>
+              <th scope="col">Order Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% if orders['Items'] %}
+          {% for order in orders['Items'] %}
+          <tr>
+              <td style="display:none"> {{order.restaurant_id}}</td>
+              <td scope="row">{{order.restaurant_name}}</td>
+              <th scope="row"><a class="btn btn-primary orderInfo" href="#" data-id="{{order.order_id}}" data-rest="{{order.restaurant_id}}">Order Details</a></th>
+              <td scope="row">{{order.order_time}}</td>
+              <td scope="row">{{order.order_fulfilled_time}}</td>
+              <td scope="row">{{order.order_status}}</td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+          </tbody>
+      </table>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="orderDisplay" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="orderModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-hover">
+              <thead class="thead-dark">
+              <tr>
+                  <th scope="col">Item Name</th>
+                  <th scope="col">Item Price</th>
+                  <th scope="col">Quantity Ordered</th>
+                  <th scope="col">Order Price</th>
+              </tr>
+              </thead>
+              <tbody class="order_result_info">
+              
+              </tbody>
+              <tfoot class="order_result_total">
+              
+              </tfoot>
+          </table>  
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  (function($) {
+        var orderModal = $('#orderDisplay');
+        $('.orderInfo').on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: '/customer/' + $(this).data('rest') + '/' + $(this).data('id'),
+                success: function (response) {
+                  food_items='';
+                  order_total='';
+                  $.each(JSON.parse(response), function (item, idx) {
+                      if(idx.item_name){
+                        food_items += '<tr><td scope="row">'+idx.item_name+'</td><td scope="row">$'+idx.item_unit_price+'</td><td scope="row">'+idx.oi_quantity+'</td><td scope="row">$'+idx.oi_unit_price+'</td></tr>';
+                      }else{
+                        order_total='<tr><th>Total Cost (w/ tax)</th><td></td><td></td><td>$'+idx.order_total+'</td>';
+                      }
+                    })
+                  console.log(food_items)
+                  orderModal.find('.modal-title').html("Order Details");
+                  orderModal.find('.order_result_info').html(food_items);
+                  orderModal.find('.order_result_total').html(order_total);
+                  orderModal.modal('show');
+                }
+            });
+            return false;
+        });
+    })(jQuery);
+</script>
+{% endblock %}

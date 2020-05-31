@@ -8,69 +8,190 @@
     </div>
 </div>
 
-<div>
-    <form id="order_form{{restaurant_id}}" method="POST" action="/order/{{restaurant_id}}">
+{% if order_data %}
+<div class="col-lg-12 container backdrop">
+    <div class="container mb-3">
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <button class="btn btn-dark btn-lg" onclick="showOrders()">All orders</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-dark btn-lg" onclick="hideOrders()">Current orders</button>
+            </div>
+        </div>
+
+    </div>
+    <form id="business_orders_form{{restaurant_id}}" method="POST">
         <table class="table table-hover table-striped table-dark">
-            <tbody id="menu">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Order Status</th>
+                    <th scope="col">Order Time</th>
+                    <th scope="col">Order Type</th>
+                    <th scope="col">Order Table ID</th>
+                    <th scope="col">Order Status Update</th>
+                </tr>
+            </thead>
+            <tbody id="order">
             </tbody>
         </table>
     </form>
 
     <script type="text/javascript">
-        var menu_data = JSON.parse('{{ menu_data |  safe }}');
+        var order_data = JSON.parse('{{ order_data |  safe }}');
+
 
         var transform = {
             "<>": "tr",
-            'id': '${menu_item_id}',
+            'id': '${order_id}',
             "children": [{
-                "<>": "input",
-                "type": "hidden",
-                'id': '${menu_item_id}',
-                "name": "menu_item_id",
-                "value": '${menu_item_id}'
-            }, {
-                "<>": "td",
-                'name': 'item_name',
-                "html": "${item_name}",
-                "value": "item_name"
-            }, {
-                "<>": "td",
-                "html": "${item_description}"
-            }, {
-                "<>": "td",
-                "html": "$ ${item_unit_price}"
-            }, {
                 "<>": "td",
                 "children": [{
                     '<>': 'button',
                     'type': 'button',
-                    'id': 'sub',
-                    'class': 'sub',
-                    'html': '-'
-                }, {
-                    '<>': 'input',
-                    'id': '${menu_item_id}',
-                    'type': 'text',
-                    'name': 'menu_item',
-                    'value': '0'
-                }, {
+                    'class': "btn btn-danger",
+                    'data-toggle': "modal",
+                    'data-target': '#exampleModal',
+                    'id': "${restaurant_id}",
+                    "name": "order_detail",
+                    "html": "${order_id}",
+                    "value": "${order_id}",
+                }]
+            }, {
+                "<>": "td",
+                'name': 'order_status',
+                'id': 'order_status',
+                "html": "${order_status}",
+                "value": "order_status"
+            }, {
+                "<>": "td",
+                "html": "${order_time}"
+            }, {
+                "<>": "td",
+                "html": "${order_type}"
+            }, {
+                "<>": "td",
+                "html": "${table_id}"
+            }, {
+                "<>": "td",
+                'id': 'mark_complete',
+                "children": [{
                     '<>': 'button',
-                    'type': 'button',
-                    'id': 'add',
-                    'class': 'add',
-                    'html': '+'
+                    'id': '${restaurant_id}',
+                    'name': 'change-status',
+                    'class': 'completed',
+                    'html': 'Complete Order',
+                    'value': '${order_id}'
                 }]
             }]
         };
 
-        $('#menu').html(json2html.transform(menu_data, transform));
+        $('#order').html(json2html.transform(order_data, transform));
 
-        $('.add').click(function() {
-            $(this).prev().val(+$(this).prev().val() + 1);
+
+        $(function() { //document ready event
+            $('table tr').each(function() { //loop all tr's
+                var Cell = $(this).find("td[id='order_status']");
+                if (Cell.text() == 'Completed') {
+                    button = $(this).find("button[name='change-status']").html('Revert');
+                } else if (Cell.text() == 'Submitted') {
+                    button = $(this).find("button[name='change-status']").html('Work on order');
+                } else if (Cell.text() == 'In-progress') {
+                    button = $(this).find("button[name='change-status']").html('Order completed');
+                }
+            });
         });
-        $('.sub').click(function() {
-            if ($(this).next().val() > 0) $(this).next().val(+$(this).next().val() - 1);
+
+        function hideOrders() {
+            $(function() { //document ready event
+                $('table tr').each(function() { //loop all tr's
+                    var Cell = $(this).find("td[id='order_status']");
+                    if (Cell.text() == 'Completed') {
+                        $(this).hide();
+                    }
+                });
+            });
+        }
+
+        function showOrders() {
+            $(function() { //document ready event
+                $('table tr').each(function() { //loop all tr's
+                    var Cell = $(this).find("td[id='order_status']");
+                    if (Cell.text() == 'Completed') {
+                        $(this).show();
+                    }
+                });
+            });
+        }
+
+        $('button[name ="order_detail"]').click(function() {
+            var order_id = $(this).attr('value');
+            var restaurant_id = $(this).attr('id');
+            // console.log(restaurant_id);
+            var response = getResponse(restaurant_id, order_id);
         });
+
+        function getResponse(restaurant_id, order_id) {
+            var orderModal = $('#orderDisplay');
+            $.ajax({
+                type: "GET",
+                url: '/business/' + restaurant_id + '/' + order_id,
+                success: function(response) {
+                    food_items = '';
+                    order_total = '';
+                    $.each(JSON.parse(response), function(item, idx) {
+                        if (idx.item_name) {
+                            food_items += '<tr><td scope="row">' + idx.item_name + '</td><td scope="row">$' + idx.item_unit_price + '</td><td scope="row">' + idx.oi_quantity + '</td><td scope="row">$' + idx.oi_unit_price + '</td></tr>';
+                        } else {
+                            order_total = '<tr><th>Total Cost (w/ taxes)</th><td></td><td></td><td>$' + idx.order_total + '</td>';
+                        }
+                    })
+                    console.log(food_items)
+                    orderModal.find('.modal-title').html("Order Details");
+                    orderModal.find('.order_result_info').html(food_items);
+                    orderModal.find('.order_result_total').html(order_total);
+                    orderModal.modal('show');
+                }
+            });
+            return false;
+        }
     </script>
 </div>
-{% endblock %}
+<!-- Modal -->
+<div class="modal fade" id="orderDisplay" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Item Name</th>
+                            <th scope="col">Item Price</th>
+                            <th scope="col">Quantity Ordered</th>
+                            <th scope="col">Order Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="order_result_info">
+
+                    </tbody>
+                    <tfoot class="order_result_total">
+
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %} {% endblock %}
