@@ -106,7 +106,7 @@
         function hideOrders() {
             $(function() { //document ready event
                 $('table tr').each(function() { //loop all tr's
-                    var Cell = $(this).find("td[id='order_status']");
+                    var Cell = $(this).find("td[name='order_status']");
                     if (Cell.text() == 'Completed') {
                         $(this).hide();
                     }
@@ -117,7 +117,7 @@
         function showOrders() {
             $(function() { //document ready event
                 $('table tr').each(function() { //loop all tr's
-                    var Cell = $(this).find("td[id='order_status']");
+                    var Cell = $(this).find("td[name='order_status']");
                     if (Cell.text() == 'Completed') {
                         $(this).show();
                     }
